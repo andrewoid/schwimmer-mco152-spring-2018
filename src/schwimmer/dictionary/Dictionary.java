@@ -27,6 +27,10 @@ public class Dictionary {
 		
 	}
 	
+	public String getDefinition(String word) {
+		return map.get(word.toUpperCase());
+	}
+	
 	public int size() {
 		return map.size();
 	}
