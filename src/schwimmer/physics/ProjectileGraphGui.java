@@ -14,6 +14,9 @@ import javax.swing.JTextField;
 
 public class ProjectileGraphGui extends JFrame {
 
+	private AnimatedProjectileGraph projectileGraph;
+
+
 	public ProjectileGraphGui() {
 		
 		setTitle("Projectile Viewer");
@@ -23,12 +26,20 @@ public class ProjectileGraphGui extends JFrame {
 		JPanel panel = new JPanel();
 		panel.setLayout(new BorderLayout());
 		
-		ProjectileGraph projectileGraph = new ProjectileGraph();
+		projectileGraph = new AnimatedProjectileGraph();
 		panel.add(projectileGraph, BorderLayout.CENTER);
 		
-		projectileGraph.invalidate();
-		
 		setContentPane(panel);
+		
+		Thread thread = new Thread(this::advanceGraph);
+		thread.start();
+		
+	}
+	
+	public void advanceGraph() {
+		while (true) {
+			projectileGraph.repaint();
+		}
 	}
 	
 	
