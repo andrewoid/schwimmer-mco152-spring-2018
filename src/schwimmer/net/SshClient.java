@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.HttpURLConnection;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
@@ -18,7 +19,9 @@ public class SshClient {
 //			
 //			socket.startHandshake();
 			
-			Socket socket = new Socket("www.google.com", 80);
+			HttpURLConnection connection;
+			
+			Socket socket = new Socket("earthquake.usgs.gov", 80);
 			
 			PrintWriter out = new PrintWriter(socket.getOutputStream());
 			
