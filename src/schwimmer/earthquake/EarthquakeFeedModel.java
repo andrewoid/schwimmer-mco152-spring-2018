@@ -2,7 +2,7 @@ package schwimmer.earthquake;
 
 import java.util.List;
 
-public class EarthquakeFeed {
+public class EarthquakeFeedModel {
 
 	private String type;
 	private List<Earthquake> features;
