@@ -3,6 +3,8 @@ package schwimmer.earthquake.net;
 import java.util.Comparator;
 import java.util.Optional;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.swing.text.JTextComponent;
 
 import retrofit2.Call;
@@ -12,10 +14,12 @@ import schwimmer.earthquake.Earthquake;
 import schwimmer.earthquake.EarthquakeFeedModel;
 import schwimmer.earthquake.EarthquakeProperties;
 
+@Singleton
 public class EarthquakeController {
 	private EarthquakeView view;
 	private USGSEarthquakeService service;
 
+	@Inject
 	public EarthquakeController(EarthquakeView view, USGSEarthquakeService service) {
 		this.view = view;
 		this.service = service;

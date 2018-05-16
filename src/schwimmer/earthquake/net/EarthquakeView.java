@@ -2,6 +2,8 @@ package schwimmer.earthquake.net;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
+
+import javax.inject.Inject;
 /*import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.util.Comparator;
@@ -9,6 +11,10 @@ import java.util.Optional;
 */
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
+
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import com.google.inject.Singleton;
 
 /*import elberger.earthquake.Earthquake;
 import elberger.earthquake.EarthquakeFeed;
@@ -18,6 +24,7 @@ import retrofit2.Response;*/
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+@Singleton
 public class EarthquakeView extends JFrame //implements WindowListener
 {
 	private static final long serialVersionUID = 6111006689421939040L;
@@ -30,7 +37,8 @@ public class EarthquakeView extends JFrame //implements WindowListener
 	private JTextField hourMag;
 	private JTextField hourLoc;
 	
-	public EarthquakeView()
+	@Inject
+	public EarthquakeView(EarthquakeController controller)
 	{
 		setTitle("Largest Earthquakes");
 		setSize(700, 400);
@@ -86,183 +94,12 @@ public class EarthquakeView extends JFrame //implements WindowListener
 		hourMag.setEditable(false);
 		hourLoc.setEditable(false);
 		
-//		addWindowListener(this);
-		
 		panel.add(earthquakePanel, BorderLayout.CENTER);
 		
 		add(panel);
 		
-		Retrofit retrofit = new Retrofit.Builder()
-				.baseUrl("https://earthquake.usgs.gov")
-				.addConverterFactory(GsonConverterFactory.create())
-				.build();
-		
-		USGSEarthquakeService service = retrofit.create(USGSEarthquakeService.class);
-			
-		EarthquakeController controller = new EarthquakeController(this, service);
-		
 		controller.refreshData();
-
 	}
-
-/*	public void getMonthValues()
-	{
-		Call<EarthquakeFeed> callMonth = service.getAllMonth();
-		callMonth.enqueue(new Callback<EarthquakeFeed>()
-				{
-					@Override
-					public void onResponse(Call<EarthquakeFeed> callMonth, Response<EarthquakeFeed> responseMonth)
-					{
-						EarthquakeFeed feedMonth = responseMonth.body();
-						
-						Optional<Earthquake> greatestMonth = feedMonth.getFeatures()
-								.stream()
-								.max(Comparator.comparing(e -> e.getProperties().getMag()));
-							
-							String monthMagValue = String.valueOf(greatestMonth.get().getProperties().getMag());
-							String monthLocValue = String.valueOf(greatestMonth.get().getProperties().getPlace());
-							monthMag.setText(monthMagValue);
-							monthLoc.setText(monthLocValue);
-					}
-					
-					@Override
-					public void onFailure(Call<EarthquakeFeed> callMonth, Throwable t)
-					{
-						t.printStackTrace();
-					}
-				});
-	}
-	
-	public void getWeekValues()
-	{
-		Call<EarthquakeFeed> callWeek = service.getAllWeek();
-		callWeek.enqueue(new Callback<EarthquakeFeed>()
-				{
-					@Override
-					public void onResponse(Call<EarthquakeFeed> callWeek, Response<EarthquakeFeed> responseWeek)
-					{
-						EarthquakeFeed feedWeek = responseWeek.body();
-						
-						Optional<Earthquake> greatestWeek = feedWeek.getFeatures()
-								.stream()
-								.max(Comparator.comparing(e -> e.getProperties().getMag()));
-							
-							String weekMagValue = String.valueOf(greatestWeek.get().getProperties().getMag());
-							String weekLocValue = String.valueOf(greatestWeek.get().getProperties().getPlace());
-							weekMag.setText(weekMagValue);
-							weekLoc.setText(weekLocValue);
-					}
-					
-					@Override
-					public void onFailure(Call<EarthquakeFeed> callMonth, Throwable t)
-					{
-						t.printStackTrace();
-					}
-				});
-	}
-	
-	public void getDayValues()
-	{
-		Call<EarthquakeFeed> callDay = service.getAllDay();
-		callDay.enqueue(new Callback<EarthquakeFeed>()
-		{
-			@Override
-			public void onResponse(Call<EarthquakeFeed> callDay, Response<EarthquakeFeed> responseDay)
-			{
-				EarthquakeFeed feedDay = responseDay.body();
-				
-				Optional<Earthquake> greatestDay = feedDay.getFeatures()
-						.stream()
-						.max(Comparator.comparing(e -> e.getProperties().getMag()));
-					
-					String dayMagValue = String.valueOf(greatestDay.get().getProperties().getMag());
-					String dayLocValue = String.valueOf(greatestDay.get().getProperties().getPlace());
-					dayMag.setText(dayMagValue);
-					dayLoc.setText(dayLocValue);
-			}
-			
-			@Override
-			public void onFailure(Call<EarthquakeFeed> callDay, Throwable t)
-			{
-				t.printStackTrace();
-			}
-		});
-	}
-	
-	public void getHourValues()
-	{
-		Call<EarthquakeFeed> callHour = service.getAllHour();
-		callHour.enqueue(new Callback<EarthquakeFeed>()
-		{
-			@Override
-			public void onResponse(Call<EarthquakeFeed> callHour, Response<EarthquakeFeed> responseHour)
-			{
-				EarthquakeFeed feedHour = responseHour.body();
-				
-				Optional<Earthquake> greatestHour = feedHour.getFeatures()
-					.stream()
-					.max(Comparator.comparing(e -> e.getProperties().getMag()));
-				
-				String hourMagValue = String.valueOf(greatestHour.get().getProperties().getMag());
-				String hourLocValue = String.valueOf(greatestHour.get().getProperties().getPlace());
-				hourMag.setText(hourMagValue);
-				hourLoc.setText(hourLocValue);
-			}
-			
-			@Override
-			public void onFailure(Call<EarthquakeFeed> callHour, Throwable t)
-			{
-				t.printStackTrace();
-			}
-		});
-		
-	}*/
-
-/*	@Override
-	public void windowActivated(WindowEvent e)
-	{
-		
-	}
-
-	@Override
-	public void windowClosed(WindowEvent e)
-	{
-		
-	}
-
-	@Override
-	public void windowClosing(WindowEvent e)
-	{
-		
-	}
-
-	@Override
-	public void windowDeactivated(WindowEvent e)
-	{
-		
-	}
-
-	@Override
-	public void windowDeiconified(WindowEvent e)
-	{
-		
-	}
-
-	@Override
-	public void windowIconified(WindowEvent e)
-	{
-		
-	}
-	
-	@Override
-	public void windowOpened(WindowEvent e)
-	{
-		getMonthValues();
-		getWeekValues();
-		getDayValues();
-		getHourValues();		
-	}*/
-
 
 	public JTextField getMonthMagTextField()
 	{
@@ -272,11 +109,6 @@ public class EarthquakeView extends JFrame //implements WindowListener
 	public JTextField getMonthLocTextField()
 	{
 		return monthLoc;
-	}
-	
-	public static void main(String[] args)
-	{
-		new EarthquakeView().setVisible(true);
 	}
 
 	public JTextField getWeekMagTextField()
@@ -307,5 +139,14 @@ public class EarthquakeView extends JFrame //implements WindowListener
 	public JTextComponent getHourLocTextField()
 	{
 		return hourLoc;
+	}
+	
+	public static void main(String[] args)
+	{
+		Injector injector = Guice.createInjector(new EarthquakeModule());
+
+		EarthquakeView view = injector.getInstance(EarthquakeView.class);
+			
+		view.setVisible(true);
 	}
 }
